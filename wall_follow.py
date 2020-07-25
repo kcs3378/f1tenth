@@ -44,8 +44,8 @@ class Race_car:    # 클래스함수로 정의
             estimated_previous_val_left[i] = estimated_current_val_left[i] 
 
         for i in range(720):
-            current_val_right[i] = scan[ 291 + i ]  # 실제 우측 벽과의 거리
-            current_val_left[i] = scan[ 840 - i ]   # 실제 좌측 벽과의 거리
+            current_val_right[i] = scan[ 360 + i ]  # 실제 우측 벽과의 거리
+            current_val_left[i] = scan[ 1080 - i ]   # 실제 좌측 벽과의 거리
 
         for i in range(720):
             estimated_current_val_right[i] = current_val_right[i] # 현재값 갱신
@@ -53,7 +53,7 @@ class Race_car:    # 클래스함수로 정의
 
         laserscan_and_obtain_coordinate_data() # 실제 벽면의 x,y 좌표 계산 함수
 
-        val_forward = scan[540] # 정면의 벽과의 거리
+        val_forward = scan[720] # 정면의 벽과의 거리
 
         collect_distance_data_within_15m() # 15를 기준으로 잡고 작은값들을 리스트에 넣어주는 함수
 
@@ -79,8 +79,6 @@ class Race_car:    # 클래스함수로 정의
 
             elif val_forward < 3 and val_forward > 1:
                 select_middle_value_between_left_right() # 좌, 우측 최대값의 좌표 
-                select_theta_now_Low_Pass_Filter() # PID부분
-                Steering_PID_Control_Using_Gyto() # PID부분
             
             elif val_forward < 1:
                 if main_wall == 1:
@@ -108,8 +106,6 @@ class Race_car:    # 클래스함수로 정의
 
             elif val_forward < 1.5 and val_forward > 1:
                 select_middle_value_between_left_right()
-                select_theta_now_Low_Pass_Filter()
-                Steering_PID_Control_Using_Gyto()
 
             elif val_forward < 1:
                 if main_wall == 1:
@@ -137,8 +133,6 @@ class Race_car:    # 클래스함수로 정의
 
             elif val_forward < 1.5 and val_forward < 1:
                 select_middle_value_between_left_right()
-                select_theta_now_Low_Pass_Filter()
-                Steering_PID_Control_Using_Gyto()  
 
             elif val_forward < 1:
                 if main_wall == 1:
@@ -166,9 +160,7 @@ class Race_car:    # 클래스함수로 정의
                     select_path_and_PD_control()
 
                 elif val_forward < 1.5 and val_forward < 1:
-                    select_middle_value_between_left_right()
-                    select_theta_now_Low_Pass_Filter()
-                    Steering_PID_Control_Using_Gyto()  
+                    select_middle_value_between_left_right()  
 
                 elif val_forward < 1:
                     if main_wall == 1:
@@ -193,9 +185,6 @@ class Race_car:    # 클래스함수로 정의
 
                  elif val_forward < 1.5 and val_forward < 1:
                     select_middle_value_between_left_right()
-                    select_theta_now_Low_Pass_Filter()
-                    Steering_PID_Control_Using_Gyto()  
-
                 elif val_forward < 1:
                     if main_wall == 1:
                         distance_now = 3
