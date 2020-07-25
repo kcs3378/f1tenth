@@ -1,8 +1,7 @@
 import rospy
 from ackermann_msgs.msg import AckermannDriveStamped
 from sensor_msgs.msg import LaserScan
-from sensor_msgs.msg import Imu
-from std_msgs.msg import UInt64
+import timeit
 
 ackermann_data = AckermannDriveStamped()
 
@@ -22,6 +21,7 @@ right_largest_degree_next = [0] * 720 # 우측 가장 큰 값의 각도를 구�
 left_largest_value_next = [0] * 720 # 좌측 가장 큰 값을 구하기 위한 리스트
 left_largest_degree_next [0] * 720 # 좌측 가장 큰 값의 각도를 구하기 위한 리스트
 
+
 left_return = 0
 right_return = 0
 main_wall = 1 # 1: 우측 0: 좌측
@@ -29,13 +29,15 @@ main_wall = 1 # 1: 우측 0: 좌측
 
 class Race_car:    # 클래스함수로 정의
     def __init__(self):
-        self.publisher = rospy.Publisher("/servo", UInt64, queue_size = 10 )
         self.subscriber = rospy.Subscriber("/scan", LaserScan, call_back)
-        self.subscriber = rospy.Subscriber("/imu", Imu, call_back2)
-        # callback2
 
     def call_back(self, scan_data):    # 센서값
+
+        start = timeit.default_timefr()
+
         self.scan = scan_data.ranges
+        self.theta_pre = self.theta_now
+        self.err_pre = self.err_now
         
         for i in range(720):   # 현재값과의 비교를 위해 이전값 저장
             estimated_previous_val_right[i] = estimated_current_val_right[i] 
@@ -51,13 +53,13 @@ class Race_car:    # 클래스함수로 정의
 
         laserscan_and_obtain_coordinate_data() # 실제 벽면의 x,y 좌표 계산 함수
 
-        val_forward = scan[560] # 정면의 벽과의 거리
+        val_forward = scan[540] # 정면의 벽과의 거리
 
         collect_distance_data_within_15m() # 15를 기준으로 잡고 작은값들을 리스트에 넣어주는 함수
 
         find_largest_distance_data_on_left_right_respectively() # 좌, 우측 코너 확인 함수
 
-        change_angle_base_2() # 각도변환 함수 
+        change_angle_base_2() # 각도변환 함수
 
         ################## 직진 ###################
         if left_corner_exist  == 0 and right_corner_exist == 0:
@@ -206,11 +208,9 @@ class Race_car:    # 클래스함수로 정의
 
         speed_control() # 
 
-        #servo.data_servo_data
-
-        #ros_tutorial_pub.publish(servo)
-
-        #dt = clock() - start
+        stop = timeit.default_timer()
+        
+        dt = stop - start #한 주기에 걸리는 시간
 
 
 
@@ -362,4 +362,4 @@ def select_wall_and_driving_mode():
 
 if __name__ == '__main__':
     rospy.init_node('/scan')
-    rospy.spin()
+    rospy.spin()    
